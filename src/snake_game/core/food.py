@@ -13,7 +13,7 @@ class Food:
             snakeBody = []
         while True:
             pos = (random.randint(0, gridSize - 1),
-                   random.randint(0, gridSize - 1))
+                random.randint(0, gridSize - 1))
             if pos not in snakeBody:
                 self.position = pos
                 break
@@ -23,5 +23,5 @@ class Food:
             x = self.position[0] * cellSize
             y = self.position[1] * cellSize
             pygame.draw.circle(screen, red,
-                              (x + cellSize//2, y + cellSize//2),
+                            (x + cellSize//2, y + cellSize//2),
                               cellSize //2 - 2)

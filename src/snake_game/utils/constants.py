@@ -1,5 +1,5 @@
-windowWidth = 600
-windowHeight = 600
+windowWidth = 1000
+windowHeight = 1000
 gameTitle= "Snake Game"
 fps = 10
 gridSize = 20
