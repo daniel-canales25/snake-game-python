@@ -2,7 +2,7 @@ windowWidth = 1000
 windowHeight = 1000
 gameTitle= "Snake Game"
 fps = 10
-gridSize = 20
+gridSize = 30
 cellSize = windowWidth // gridSize
 
 black = (0, 0, 0)

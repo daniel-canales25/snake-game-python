@@ -25,13 +25,22 @@ class Snake:
     def change_direction(self, newDirection):
         if (newDirection[0] * -1, newDirection[1] * -1) != self.direction:
             self.nextDirection = newDirection
-
+            
+            
+    #La funcion draw se encarga de convertir los valores de grid a pixeles 
+    # (que es lo que necesita pygame)
     def draw(self, screen):
+        #enumerate sirve para recorrer un elemento iterable como una lista 
+        # y se puede obtiene el indice y su valor
         for i, segment in enumerate(self.body):
+            #Coordenada x
             x = segment[0] * cellSize
+            #Coordenada y
             y = segment[1] * cellSize
             color = darkGreen if i == 0 else green
+            #funcion de pygame pygame.draw.rect(superficie, color, rect, ancho=0)
             pygame.draw.rect(screen, color, (x, y, cellSize, cellSize))
+            #animacion de borde negro(0,0,0) y borde de 1 pixel al moverse la serpiente 
             pygame.draw.rect(screen, (0, 0, 0), (x, y, cellSize, cellSize), 1)
 
     @property

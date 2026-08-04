@@ -24,8 +24,12 @@ class Game:
         self.display_score()
 
     def display_score(self):
+        #Funcion Font los parametros son Font(fuente, tamaño en pixeles)
         font = pygame.font.Font(None, 36)
+        #Funcion render los parametros son render(texto, anti-aliasing, color del texto)
         scoreText = font.render(f"Puntuación: {self.score}", True, white)
+        #Funcion blit dibuja el texto en pantalla y lo posiciona 
+        # blit(texto en pantalla , posicion (x,y ) en pixeles)
         self.screen.blit(scoreText, (10, 10))
 
     def check_collisions(self):
