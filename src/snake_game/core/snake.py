@@ -40,7 +40,7 @@ class Snake:
             color = darkGreen if i == 0 else green
             #funcion de pygame pygame.draw.rect(superficie, color, rect, ancho=0)
             pygame.draw.rect(screen, color, (x, y, cellSize, cellSize))
-            #animacion de borde negro(0,0,0) y borde de 1 pixel al moverse la serpiente 
+            #animacion de borde negro(0,0,0) y borde de 1 pixel para contorno de cada cuadro de la serpiente
             pygame.draw.rect(screen, (0, 0, 0), (x, y, cellSize, cellSize), 1)
 
     @property
