@@ -11,8 +11,9 @@ class Snake:
 
     def move(self):
         self.direction = self.nextDirection
-        #Desempaquetado de tuplas de body 
+        #Desempaquetado de tuplas de body x , y
         headX, headY = self.body[0]
+        #Al moverse 1 cuadro la cabeza ahora cambia
         newHead = (headX + self.direction[0], headY + self.direction[1])
         self.body.insert(0, newHead)
         if not self.isGrowing:
