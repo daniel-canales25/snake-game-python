@@ -16,6 +16,15 @@ def main():
                 running = False
                 pygame.quit()
                 sys.exit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_RIGHT:
+                    game.snake.change_direction((1, 0))
+                elif event.key == pygame.K_LEFT:
+                    game.snake.change_direction((-1, 0))
+                elif event.key == pygame.K_UP:
+                    game.snake.change_direction((0, -1))
+                elif event.key == pygame.K_DOWN:
+                    game.snake.change_direction((0, 1))
         game.update()
         game.draw()
         pygame.display.flip()
