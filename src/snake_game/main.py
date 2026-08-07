@@ -11,6 +11,12 @@ def main():
     game = Game(screen)
     running = True
     while running:
+        game.update()
+        game.draw()
+        if game.isGameOver:
+            game.draw_game_over()
+        pygame.display.flip()
+        clock.tick(fps)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
@@ -33,12 +39,7 @@ def main():
                         game.snake.change_direction((0, -1))
                     elif event.key == pygame.K_DOWN:
                         game.snake.change_direction((0, 1))
-        game.update()
-        game.draw()
-        if game.isGameOver:
-            game.draw_game_over()
-        pygame.display.flip()
-        clock.tick(fps)
+        
 
 if __name__ == "__main__":
     main()
