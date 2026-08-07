@@ -1,6 +1,6 @@
 import random
 import pygame
-from ..utils.constants import gridSize, cellSize, red
+from ..utils.constants import gridSize, cellSize, red, scoreAreaHeight
 
 class Food:
 
@@ -13,7 +13,7 @@ class Food:
             snakeBody = []
         while True:
             pos = (random.randint(0, gridSize - 1),
-                random.randint(0, gridSize - 1))
+                random.randint(scoreAreaHeight, gridSize - 1))
             if pos not in snakeBody:
                 self.position = pos
                 break

@@ -1,7 +1,7 @@
-windowWidth = 1000
-windowHeight = 1000
+windowWidth = 990
+windowHeight = 990
 gameTitle= "Snake Game"
-fps = 10
+fps = 7
 gridSize = 30
 cellSize = windowWidth // gridSize
 
@@ -11,8 +11,14 @@ green = (0, 255, 0)
 red = (255, 0, 0)
 blue = (0, 0, 255)
 darkGreen = (0, 150, 0)
+gridColor = (80, 80, 80)
 
-initialSnake = [(5, 5), (4, 5), (3, 5)]
+gameTitleText = "SNAKE"
+titleFontSize = 72
+titleColor = (200, 200, 200)
+
+initialSnake = [(5, 8), (4, 8), (3, 8)]
 initialDirection = (1, 0)
+scoreAreaHeight = 3
 
 foodCount = 1

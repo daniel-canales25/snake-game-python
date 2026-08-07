@@ -1,5 +1,5 @@
 import pygame
-from ..utils.constants import cellSize, initialSnake, initialDirection, green, darkGreen
+from ..utils.constants import cellSize, initialSnake, initialDirection, green, darkGreen, scoreAreaHeight
 
 class Snake:
 
@@ -15,6 +15,8 @@ class Snake:
         headX, headY = self.body[0]
         #Al moverse 1 cuadro la cabeza ahora cambia de lugar
         newHead = (headX + self.direction[0], headY + self.direction[1])
+        if newHead[1] < scoreAreaHeight:
+            newHead = (newHead[0], scoreAreaHeight)
         self.body.insert(0, newHead)
         if not self.isGrowing:
             self.body.pop()
