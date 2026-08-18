@@ -25,6 +25,7 @@ def main():
 
             if current_state == "START_SCREEN":
                 if start_screen.handle_event(event):
+                    start_screen.clear_message()
                     current_state = "PLAYING"
                     game = Game(screen)
 
@@ -54,8 +55,8 @@ def main():
                         running = False
                     elif event.key == pygame.K_RETURN:
                         name = name_input.name if name_input.name.strip() else defaultName
-                        save_score(name, game.score)
-                        start_screen.refresh()
+                        saved = save_score(name, game.score)
+                        start_screen.refresh(saved)
                         current_state = "START_SCREEN"
                     else:
                         name_input.handle_event(event)

@@ -3,7 +3,7 @@ from ..utils.constants import (
     windowWidth, windowHeight, black, white, green,
     gameTitleText, titleFontSize, titleColor, gridColor
 )
-from ..utils.score_manager import get_top_scores, get_total_scores
+from ..utils.score_manager import get_top_scores
 
 
 class StartScreen:
@@ -11,15 +11,18 @@ class StartScreen:
     def __init__(self, screen):
         self.screen = screen
         self.scores = get_top_scores()
-        self.totalScores = get_total_scores()
+        self.showNotQualified = False
         self.playButton = pygame.Rect(
             windowWidth // 2 - 100, windowHeight - 150, 200, 60
         )
         self.hoverPlay = False
 
-    def refresh(self):
+    def refresh(self, qualified=True):
         self.scores = get_top_scores()
-        self.totalScores = get_total_scores()
+        self.showNotQualified = not qualified
+
+    def clear_message(self):
+        self.showNotQualified = False
 
     def draw(self):
         self.screen.fill(black)
@@ -73,7 +76,7 @@ class StartScreen:
                 self.screen.blit(nameSurface, (tableX + colWidths[0], y))
                 self.screen.blit(scoreSurface, (tableX + colWidths[0] + colWidths[1], y))
 
-        if self.totalScores > 10:
+        if self.showNotQualified:
             fontMsg = pygame.font.SysFont("courier", 18)
             msgSurface = fontMsg.render("No has alcanzado a los mejores 10 puntajes", True, (255, 200, 0))
             msgRect = msgSurface.get_rect(center=(windowWidth // 2, tableY + 50 + 10 * rowHeight + 20))
