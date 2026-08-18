@@ -59,7 +59,7 @@ class Game:
 
     def game_over(self):
         self.isGameOver = True
-        print("Game Over!")
+        print("¡Fin del juego!")
 
     def restart(self):
         self.snake = Snake()
@@ -69,15 +69,12 @@ class Game:
 
     def draw_game_over(self):
         self.screen.fill(black)
-        font = pygame.font.SysFont('courier', 72)
-        textSurface = font.render("GAME OVER", True, white)
-        textRect = textSurface.get_rect(center=(windowWidth // 2, windowHeight // 2))
+        font = pygame.font.SysFont("courier", 72)
+        textSurface = font.render("FIN DEL JUEGO", True, white)
+        textRect = textSurface.get_rect(center=(windowWidth // 2, windowHeight // 2 - 40))
         self.screen.blit(textSurface, textRect)
 
-        fontSmall = pygame.font.SysFont('courier', 24)
-        restartText = fontSmall.render("ESPACIO - Reiniciar", True, white)
-        exitText = fontSmall.render("ESC - Salir", True, white)
-        restartRect = restartText.get_rect(center=(windowWidth // 2, windowHeight // 2 + 60))
-        exitRect = exitText.get_rect(center=(windowWidth // 2, windowHeight // 2 + 90))
-        self.screen.blit(restartText, restartRect)
-        self.screen.blit(exitText, exitRect)
+        fontScore = pygame.font.SysFont("courier", 36)
+        scoreSurface = fontScore.render(f"Puntaje: {self.score}", True, white)
+        scoreRect = scoreSurface.get_rect(center=(windowWidth // 2, windowHeight // 2 + 30))
+        self.screen.blit(scoreSurface, scoreRect)

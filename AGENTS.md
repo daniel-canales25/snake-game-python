@@ -18,47 +18,90 @@ uv run snake-game
 src/
   snake_game/
     __init__.py        — re-exports main()
-    main.py            — entrypoint (Pygame init + game loop)
+    main.py            — entrypoint (Pygame init + state machine)
     core/
-      game.py          — Game orchestrator (update, draw, collision, restart)
+      game.py          — Game orchestrator (update, draw, collision)
       snake.py         — Snake movement, growth, direction change, rendering
       food.py          — Food spawning (avoids snake body), rendering
+      start_screen.py  — Start screen with leaderboard + PLAY button
+      name_input.py    — Name input screen after game over
     utils/
       constants.py     — Grid 30×30 of 33px cells, colors, FPS=7, initial state
+      score_manager.py — Load/save scores to scores.json (top 10)
 assets/                — empty (no assets used yet)
 tests/                 — empty (no tests yet)
+scores.json            — auto-generated, persists player scores
 ```
 
 ## Application flow
+
+### State machine (`main.py`)
+
+The game uses a **3-state machine**:
+
+```
+START_SCREEN → PLAYING → NAME_INPUT → START_SCREEN (loop)
+                     ↑         │
+                     └─────────┘  (K_SPACE reinicia el juego)
+```
+
+| State | Renders | Keyboard |
+|---|---|---|
+| `START_SCREEN` | Leaderboard table + PLAY button | Click PLAY → `PLAYING` |
+| `PLAYING` | Snake game (current loop) | Arrows move, game over → `NAME_INPUT` |
+| `NAME_INPUT` | Score + name input field | `ENTER` saves + `START_SCREEN`, `SPACE` restarts + `PLAYING`, `ESC` exits |
 
 ### Entry point (`main.py`)
 
 1. `pygame.init()` — initializes Pygame.
 2. Creates a `990×990` window (`windowWidth × windowHeight`).
-3. Instantiates `Game(screen)` which creates `Snake` and `Food`.
+3. Starts in `START_SCREEN` state with `StartScreen(screen)`.
 4. Main loop runs at **7 FPS** (`clock.tick(fps)`).
 
-### Game loop iteration (`main.py:13-41`)
+### Game loop iteration (`main.py:21-76`)
 
 Each tick:
 
-1. **Events** — processes all queued Pygame events:
-   - `QUIT` → exits.
-   - `KEYDOWN`:
-     - If **game over**: `SPACE` → `game.restart()`, `ESC` → exit.
-     - If **playing**: Arrow keys → `game.snake.change_direction()`.
-2. **Update** (`game.update()`) — only if not game over:
-   - `snake.move()` — advances snake one cell in current direction.
-   - `game.check_collisions()` — checks food pickup and wall/self collisions.
-3. **Draw** (`game.draw()`):
-   - Fills screen black.
-   - Draws grid lines (gray, rows 3–29 only).
-   - Draws snake (green body, dark green head, black outline per cell).
-   - Draws food (red circle).
-   - Displays score ("Puntuación: N") at top-left.
-   - Displays title ("SNAKE") centered in top area.
-4. If game over → `game.draw_game_over()` — black screen with "GAME OVER" and instructions ("ESPACIO - Reiniciar", "ESC - Salir").
-5. `pygame.display.flip()` → `clock.tick(7)`.
+1. **Events** — processes all queued Pygame events based on current state:
+   - `START_SCREEN`: click PLAY → transition to `PLAYING`.
+   - `PLAYING`: arrow keys → `snake.change_direction()`, game over → transition to `NAME_INPUT`.
+   - `NAME_INPUT`: `ENTER` → save score + `START_SCREEN`, `SPACE` → new game + `PLAYING`, `ESC` → exit.
+2. **Draw** — renders current state:
+   - `START_SCREEN`: `start_screen.draw()` — leaderboard table + PLAY button.
+   - `PLAYING`: `game.update()` + `game.draw()` — snake game.
+   - `NAME_INPUT`: `name_input.draw()` — score + name field + instructions.
+3. `pygame.display.flip()` → `clock.tick(7)`.
+
+### Start screen (`core/start_screen.py`)
+
+- `StartScreen(screen)`: loads scores, creates PLAY button.
+- `refresh()`: reloads scores from disk.
+- `draw()`: renders title "SNAKE", "LEADERBOARD" header, table with columns (#, NOMBRE, PUNTAJE), PLAY button with hover effect, hint text.
+- `handle_event(event)`: returns `True` if click on PLAY button.
+
+### Name input screen (`core/name_input.py`)
+
+- `NameInput(screen, score)`: initializes empty name field, stores final score.
+- `draw()`: renders "GAME OVER" (red), score, input label, text field with blinking cursor, char counter, hints (ENTER/SPACE/ESC), default name hint if empty.
+- `handle_event(event)`: handles KEYDOWN — letters/numbers (max 5 chars, uppercase), BACKSPACE, ENTER → returns `("confirm", name)`.
+- `update_cursor()`: toggles cursor visibility every 30 frames.
+
+### Keyboard in NAME_INPUT
+
+| Key | Action |
+|---|---|
+| Letters/Numbers | Write to field (max 5, uppercase) |
+| `BACKSPACE` | Delete last character |
+| `ENTER` | Save score (default "Gamer" if empty) → `START_SCREEN` |
+| `SPACE` | Restart game → `PLAYING` with new `Game()` |
+| `ESC` | Exit game |
+
+### Score persistence (`utils/score_manager.py`)
+
+- `load_scores()`: reads `scores.json`, returns sorted list of `{"name": str, "score": int}` (top 10). Returns `[]` if file missing.
+- `save_score(name, score)`: appends record, sorts by score desc, keeps top 10, writes to `scores.json`.
+- `get_top_scores()`: returns top 10 sorted scores.
+- `scores.json` is auto-created in project root on first save.
 
 ### Snake (`core/snake.py`)
 
@@ -84,7 +127,7 @@ Each tick:
 ### Game state (`game.py`)
 
 - `score` — increments by 10 per food eaten.
-- `isGameOver` — boolean flag; when `True`, update loop is skipped and game over screen is drawn.
+- `isGameOver` — boolean flag; when `True`, update loop is skipped.
 - `restart()` — re-creates `Snake` and `Food`, resets score to 0, sets `isGameOver=False`.
 
 ### Grid & constants (`utils/constants.py`)
@@ -101,6 +144,8 @@ Each tick:
 | `initialSnake` | `[(5,8),(4,8),(3,8)]` | Head at (5,8), tail at (3,8) |
 | `initialDirection` | `(1,0)` | Moving right |
 | `foodCount` | 1 | Defined but unused |
+| `maxNameLength` | 5 | Max characters for player name |
+| `defaultName` | "Gamer" | Default name if input is empty |
 | Colors | black, white, green, red, blue, darkGreen, gridColor, titleColor | |
 
 ## Naming convention

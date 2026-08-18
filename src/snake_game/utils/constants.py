@@ -22,3 +22,6 @@ initialDirection = (1, 0)
 scoreAreaHeight = 3
 
 foodCount = 1
+
+maxNameLength = 5
+defaultName = "Gamer"
