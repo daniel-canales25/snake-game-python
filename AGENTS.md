@@ -47,7 +47,7 @@ START_SCREEN → PLAYING → NAME_INPUT → START_SCREEN (loop)
 
 | State | Renders | Keyboard |
 |---|---|---|
-| `START_SCREEN` | Leaderboard table + PLAY button | Click PLAY → `PLAYING` |
+| `START_SCREEN` | Leaderboard table + PLAY button | Click PLAY → `PLAYING`, `SPACE` → `PLAYING` |
 | `PLAYING` | Snake game (current loop) | Arrows move, game over → `NAME_INPUT` |
 | `NAME_INPUT` | Score + name input field | `ENTER` saves + `START_SCREEN`, `SPACE` restarts + `PLAYING`, `ESC` exits |
 
@@ -63,7 +63,7 @@ START_SCREEN → PLAYING → NAME_INPUT → START_SCREEN (loop)
 Each tick:
 
 1. **Events** — processes all queued Pygame events based on current state:
-   - `START_SCREEN`: click PLAY → transition to `PLAYING`.
+   - `START_SCREEN`: click PLAY or `SPACE` → transition to `PLAYING`.
    - `PLAYING`: arrow keys → `snake.change_direction()`, game over → transition to `NAME_INPUT`.
    - `NAME_INPUT`: `ENTER` → save score + `START_SCREEN`, `SPACE` → new game + `PLAYING`, `ESC` → exit.
 2. **Draw** — renders current state:
@@ -74,15 +74,16 @@ Each tick:
 
 ### Start screen (`core/start_screen.py`)
 
-- `StartScreen(screen)`: loads scores, creates PLAY button.
-- `refresh()`: reloads scores from disk.
-- `draw()`: renders title "SNAKE", "LEADERBOARD" header, table with columns (#, NOMBRE, PUNTAJE), PLAY button with hover effect, hint text.
-- `handle_event(event)`: returns `True` if click on PLAY button.
+- `StartScreen(screen)`: loads scores, creates PLAY button, initializes `showNotQualified=False`.
+- `refresh(qualified=True)`: reloads scores from disk. If `qualified=False`, sets `showNotQualified=True` to display warning.
+- `clear_message()`: sets `showNotQualified = False`.
+- `draw()`: renders title "SNAKE", "MEJORES PUNTUACIONES" header, table with columns (#, NOMBRE, PUNTAJE), empty-state message, "not qualified" warning (yellow), PLAY button with hover effect, hint text.
+- `handle_event(event)`: returns `True` if click on PLAY button **or** `K_SPACE` press.
 
 ### Name input screen (`core/name_input.py`)
 
 - `NameInput(screen, score)`: initializes empty name field, stores final score.
-- `draw()`: renders "GAME OVER" (red), score, input label, text field with blinking cursor, char counter, hints (ENTER/SPACE/ESC), default name hint if empty.
+- `draw()`: renders "FIN DEL JUEGO" (red), score, input label, text field with blinking cursor, char counter, hints (ENTER/SPACE/ESC), default name hint if empty.
 - `handle_event(event)`: handles KEYDOWN — letters/numbers (max 5 chars, uppercase), BACKSPACE, ENTER → returns `("confirm", name)`.
 - `update_cursor()`: toggles cursor visibility every 30 frames.
 
@@ -99,7 +100,7 @@ Each tick:
 ### Score persistence (`utils/score_manager.py`)
 
 - `load_scores()`: reads `scores.json`, returns sorted list of `{"name": str, "score": int}` (top 10). Returns `[]` if file missing.
-- `save_score(name, score)`: appends record, sorts by score desc, keeps top 10, writes to `scores.json`.
+- `save_score(name, score)`: appends record, sorts by score desc, keeps top 10, writes to `scores.json`. Returns `True` if saved, `False` if score too low to qualify.
 - `get_top_scores()`: returns top 10 sorted scores.
 - `scores.json` is auto-created in project root on first save.
 
@@ -128,7 +129,11 @@ Each tick:
 
 - `score` — increments by 10 per food eaten.
 - `isGameOver` — boolean flag; when `True`, update loop is skipped.
-- `restart()` — re-creates `Snake` and `Food`, resets score to 0, sets `isGameOver=False`.
+- `display_title()` — renders "SNAKE" centered at top of game area using `gameTitleText`, `titleFontSize`, `titleColor`.
+- `display_score()` — renders "Puntuacion: {score}" at top-left during gameplay.
+- `draw_grid()` — draws grid lines from row 3..29, col 0..29.
+- `restart()` — re-creates `Snake` and `Food`, resets score to 0, sets `isGameOver=False` (**dead code: never called**).
+- `draw_game_over()` — renders "FIN DEL JUEGO" centered (**dead code: never called**).
 
 ### Grid & constants (`utils/constants.py`)
 
@@ -146,7 +151,10 @@ Each tick:
 | `foodCount` | 1 | Defined but unused |
 | `maxNameLength` | 5 | Max characters for player name |
 | `defaultName` | "Gamer" | Default name if input is empty |
-| Colors | black, white, green, red, blue, darkGreen, gridColor, titleColor | |
+| `gameTitleText` | "SNAKE" | Title rendered during gameplay |
+| `titleFontSize` | 72 | Font size for title |
+| `titleColor` | (200, 200, 200) | Light gray color for title |
+| Colors | black, white, green, red, blue (unused), darkGreen, gridColor | |
 
 ## Naming convention
 
