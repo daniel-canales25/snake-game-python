@@ -1,19 +1,23 @@
 [
   {
+    "name": "ZACK",
+    "score": 999999
+  },
+  {
+    "name": "GAMER",
+    "score": 123133
+  },
+  {
+    "name": "DAN",
+    "score": 12313
+  },
+  {
     "name": "DAN",
     "score": 9123
   },
   {
     "name": "KATTY",
     "score": 870
-  },
-  {
-    "name": "AYO",
-    "score": 12313
-  },
-  {
-    "name": "ZACK",
-    "score": 999999
   },
   {
     "name": "LEO",
@@ -28,15 +32,11 @@
     "score": 320
   },
   {
+    "name": "HELLO",
+    "score": 200
+  },
+  {
     "name": "NOE",
-    "score": 210
-  },
-  {
-    "name": "SARA",
-    "score": 150
-  },
-  {
-    "name": "GAMER",
-    "score": 123133
+    "score": 50
   }
 ]

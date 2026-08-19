@@ -60,21 +60,3 @@ class Game:
     def game_over(self):
         self.isGameOver = True
         print("¡Fin del juego!")
-
-    def restart(self):
-        self.snake = Snake()
-        self.food = Food()
-        self.score = 0
-        self.isGameOver = False
-
-    def draw_game_over(self):
-        self.screen.fill(black)
-        font = pygame.font.SysFont("courier", 72)
-        textSurface = font.render("FIN DEL JUEGO", True, white)
-        textRect = textSurface.get_rect(center=(windowWidth // 2, windowHeight // 2 - 40))
-        self.screen.blit(textSurface, textRect)
-
-        fontScore = pygame.font.SysFont("courier", 36)
-        scoreSurface = fontScore.render(f"Puntaje: {self.score}", True, white)
-        scoreRect = scoreSurface.get_rect(center=(windowWidth // 2, windowHeight // 2 + 30))
-        self.screen.blit(scoreSurface, scoreRect)
