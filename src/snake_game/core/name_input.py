@@ -14,7 +14,6 @@ class NameInput:
         self.inputBox = pygame.Rect(
             windowWidth // 2 - 120, windowHeight // 2 + 20, 240, 50
         )
-        self.active = True
         self.cursorTimer = 0
         self.showCursor = True
 
@@ -36,12 +35,12 @@ class NameInput:
         labelRect = labelSurface.get_rect(center=(windowWidth // 2, windowHeight // 2 - 10))
         self.screen.blit(labelSurface, labelRect)
 
-        boxColor = green if self.active else gridColor
+        boxColor = green
         pygame.draw.rect(self.screen, boxColor, self.inputBox, 2, border_radius=5)
 
         fontInput = pygame.font.SysFont("courier", 32)
         displayText = self.name
-        if self.active and self.showCursor:
+        if self.showCursor:
             displayText += "_"
         inputSurface = fontInput.render(displayText, True, white)
         inputRect = inputSurface.get_rect(center=self.inputBox.center)
@@ -71,10 +70,7 @@ class NameInput:
 
     def handle_event(self, event):
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_RETURN:
-                name = self.name if self.name.strip() else defaultName
-                return ("confirm", name)
-            elif event.key == pygame.K_BACKSPACE:
+            if event.key == pygame.K_BACKSPACE:
                 self.name = self.name[:-1]
             elif event.unicode.isalnum() and len(self.name) < maxNameLength:
                 self.name += event.unicode.upper()

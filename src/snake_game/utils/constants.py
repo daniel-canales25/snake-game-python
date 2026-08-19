@@ -9,7 +9,6 @@ black = (0, 0, 0)
 white = (255, 255, 255)
 green = (0, 255, 0)
 red = (255, 0, 0)
-blue = (0, 0, 255)
 darkGreen = (0, 150, 0)
 gridColor = (80, 80, 80)
 
@@ -20,8 +19,6 @@ titleColor = (200, 200, 200)
 initialSnake = [(5, 8), (4, 8), (3, 8)]
 initialDirection = (1, 0)
 scoreAreaHeight = 3
-
-foodCount = 1
 
 maxNameLength = 5
 defaultName = "Gamer"
