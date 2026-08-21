@@ -30,3 +30,13 @@ Desarrollar un juego clásico de la serpiente (Snake) como proyecto de la materi
 uv sync
 uv run snake-game
 ```
+
+## Documentación
+
+- Reporte PDF
+- Diagramas
+- Diapositivas
+
+``` ruta
+/documentacion
+```
