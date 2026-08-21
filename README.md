@@ -40,3 +40,11 @@ uv run snake-game
 ``` ruta
 /documentacion
 ```
+
+## Video Explicativo
+
+- Se encuentra en la raiz del proyecto
+
+``` ruta
+/
+```
